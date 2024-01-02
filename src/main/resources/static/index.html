@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple To-Do List</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 300px; margin: auto; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>My To-Do List</h2>
+    <input type="text" id="todoInput" placeholder="Add new task">
+    <button onclick="addTask()">Add</button>
+    <ul id="todoList"></ul>
+</div>
+
+<script>
+        function addTask() {
+            var task = document.getElementById("todoInput").value;
+            if (task) {
+                fetch('http://localhost:8080/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ task: task })
+                }).then(response => {
+                    console.log(response);
+                    response.json();
+                  })
+                .then(data => {
+                    if (data.success) {
+                        var li = document.createElement("li");
+                        li.textContent = task;
+                        document.getElementById("todoList").appendChild(li);
+                        document.getElementById("todoInput").value = "";
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
